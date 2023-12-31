@@ -28,3 +28,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### JAR ###
+antlr-4.13.0-complete.jar
