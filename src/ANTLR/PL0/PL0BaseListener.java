@@ -1,17 +1,17 @@
 // Generated from D:/My Files/SE_er/CompilerPrinciple/FinalProject/Task2/src/ANTLR/PL0.g4 by ANTLR 4.13.1
-package PL0;
+package ANTLR.PL0;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link PL0.PL0Listener},
+ * This class provides an empty implementation of {@link PL0Listener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
 @SuppressWarnings("CheckReturnValue")
-public class PL0BaseListener implements PL0.PL0Listener {
+public class PL0BaseListener implements PL0Listener {
 	/**
 	 * {@inheritDoc}
 	 *
