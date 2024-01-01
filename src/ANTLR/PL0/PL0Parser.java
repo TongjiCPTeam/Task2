@@ -1,6 +1,5 @@
 // Generated from D:/My Files/SE_er/CompilerPrinciple/FinalProject/Task2/src/ANTLR/PL0.g4 by ANTLR 4.13.1
-package PL0;
-import ANTLR.PL0.PL0Visitor;
+package ANTLR.PL0;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -120,15 +119,15 @@ public class PL0Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_start; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PL0Listener) ((PL0Listener)listener).enterStart(this);
+			if ( listener instanceof PL0Listener ) ((PL0Listener)listener).enterStart(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PL0Listener) ((PL0Listener)listener).exitStart(this);
+			if ( listener instanceof PL0Listener ) ((PL0Listener)listener).exitStart(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof PL0Visitor) return ((PL0Visitor<? extends T>)visitor).visitStart(this);
+			if ( visitor instanceof PL0Visitor ) return ((PL0Visitor<? extends T>)visitor).visitStart(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -218,7 +217,7 @@ public class PL0Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_programHeader; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PL0.PL0Listener) ((PL0.PL0Listener)listener).enterProgramHeader(this);
+			if ( listener instanceof PL0Listener ) ((PL0Listener)listener).enterProgramHeader(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
