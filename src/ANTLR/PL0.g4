@@ -2,19 +2,21 @@ grammar PL0;
 
 // Parser rules
 
+start : program EOF ;
+
 program : programHeader subprogram ;
 
 programHeader : PROGRAM identifier ;
 
 subprogram : constDeclaration? varDeclaration? statementPart ;
 
-constDeclaration : CONST constDefinition (COMMA constDefinition)* ;
+constDeclaration : CONST constDefinition (COMMA constDefinition)* SEMI;
 
 constDefinition : identifier EQ unsignedInteger ;
 
 unsignedInteger : DIGIT (COMMA? DIGIT)* ;
 
-varDeclaration : VAR identifier (COMMA identifier)* ;
+varDeclaration : VAR identifier (COMMA identifier)* SEMI;
 
 statementPart : statement | compoundStatement ;
 
@@ -24,6 +26,7 @@ statement : assignmentStatement
           | conditionalStatement
           | loopStatement
           | compoundStatement
+          | emptyStatement
           ;
 
 assignmentStatement : identifier ASSIGN expression ;
