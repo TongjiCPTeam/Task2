@@ -405,7 +405,7 @@ public class PL0Parser extends Parser {
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
-		public TerminalNode EQ() { return getToken(PL0Parser.EQ, 0); }
+		public TerminalNode ASSIGN() { return getToken(PL0Parser.ASSIGN, 0); }
 		public UnsignedIntegerContext unsignedInteger() {
 			return getRuleContext(UnsignedIntegerContext.class,0);
 		}
@@ -437,7 +437,7 @@ public class PL0Parser extends Parser {
 			setState(72);
 			identifier();
 			setState(73);
-			match(EQ);
+			match(ASSIGN);
 			setState(74);
 			unsignedInteger();
 			}
@@ -1669,7 +1669,7 @@ public class PL0Parser extends Parser {
 		"\u0000BE\u0001\u0000\u0000\u0000CA\u0001\u0000\u0000\u0000CD\u0001\u0000"+
 		"\u0000\u0000DF\u0001\u0000\u0000\u0000EC\u0001\u0000\u0000\u0000FG\u0005"+
 		"\u0017\u0000\u0000G\t\u0001\u0000\u0000\u0000HI\u0003&\u0013\u0000IJ\u0005"+
-		"\u000f\u0000\u0000JK\u0003\f\u0006\u0000K\u000b\u0001\u0000\u0000\u0000"+
+		"\u000e\u0000\u0000JK\u0003\f\u0006\u0000K\u000b\u0001\u0000\u0000\u0000"+
 		"LS\u0005\u000b\u0000\u0000MO\u0005\u0018\u0000\u0000NM\u0001\u0000\u0000"+
 		"\u0000NO\u0001\u0000\u0000\u0000OP\u0001\u0000\u0000\u0000PR\u0005\u000b"+
 		"\u0000\u0000QN\u0001\u0000\u0000\u0000RU\u0001\u0000\u0000\u0000SQ\u0001"+

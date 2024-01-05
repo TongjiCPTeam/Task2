@@ -1,1 +1,3 @@
-PROGRAM add
+PROGRAM test
+BEGIN
+END
