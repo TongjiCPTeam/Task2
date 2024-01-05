@@ -1,11 +1,14 @@
 package ANTLR.PL0;
 
+import ANTLR.PL0.PL0BaseVisitor;
+import ANTLR.PL0.PL0Parser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PL0VisitorImpl extends PL0BaseVisitor<String>{
+public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 	private final StringBuilder code                = new StringBuilder();
 	private final List<Integer> addrList = new ArrayList<>();
 	private       int           addr;

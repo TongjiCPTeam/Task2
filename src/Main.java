@@ -23,17 +23,20 @@ public class Main {
 
         int startAddr = 0;
 
-        PL0Lexer lexer = new PL0Lexer(CharStreams.fromString(sourceCode));
-        PL0Parser parser = new PL0Parser((new CommonTokenStream(lexer)));
-//        parser.start();
-        parser.setBuildParseTree(true);
-        PL0Parser.StartContext tree = parser.start();
+        try {
+            PL0Lexer lexer = new PL0Lexer(CharStreams.fromString(sourceCode));
+            PL0Parser parser = new PL0Parser((new CommonTokenStream(lexer)));
 
-//        PL0BaseVisitor<String> visitor = new PL0VisitorImpl();
-        PL0VisitorImpl visitor = new PL0VisitorImpl(startAddr);
-        visitor.visit(tree);
-        visitor.printCode();
+            parser.setBuildParseTree(true);
+            PL0Parser.StartContext tree = parser.start();
 
-        System.out.println("parser has executed");
+            PL0VisitorImpl visitor = new PL0VisitorImpl(startAddr);
+            visitor.visit(tree);
+            visitor.printCode();
+
+            System.out.println("parser has executed");
+        }catch (Exception e){
+            System.out.println("源代码不符合语法规范");
+        }
     }
 }
