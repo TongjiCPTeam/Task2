@@ -88,6 +88,16 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 		PL0Parser.RelOperatorContext relOpCtx = ctx.relOperator();
 		String operator = relOpCtx.getText(); // 假设getText()方法会返回操作符的文本
 
+		operator = switch (operator) {
+			case "=" -> "<>";
+			case "<>" -> "=";
+			case ">" -> "<=";
+			case ">=" -> "<";
+			case "<" -> ">=";
+			case "<=" -> ">";
+			default -> operator;
+		};
+
 		return left + "," + operator + "," + right;
 	}
 
