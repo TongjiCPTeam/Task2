@@ -1,6 +1,7 @@
 import ANTLR.PL0.PL0Lexer;
 import ANTLR.PL0.PL0Parser;
 import ANTLR.PL0.PL0VisitorImpl;
+import ANTLR.PL0.SymbolTable;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -11,7 +12,7 @@ import java.nio.file.Paths;
 public class Main {
     public static void main(String[] args) {
         String filePath = "src/source.txt";
-        String sourceCode = null;
+        String sourceCode;
 
         try {
             sourceCode = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -22,6 +23,7 @@ public class Main {
         }
 
         int startAddr = 0;
+        System.out.println();
 
         try {
             PL0Lexer lexer = new PL0Lexer(CharStreams.fromString(sourceCode));
@@ -30,13 +32,16 @@ public class Main {
             parser.setBuildParseTree(true);
             PL0Parser.StartContext tree = parser.start();
 
-            PL0VisitorImpl visitor = new PL0VisitorImpl(startAddr);
+            // 构建符号表
+            SymbolTable symbolTable = new SymbolTable();
+
+            PL0VisitorImpl visitor = new PL0VisitorImpl(startAddr, symbolTable);
             visitor.visit(tree);
             visitor.printCode();
 
             System.out.println("parser has executed");
         }catch (Exception e){
-            System.out.println("源代码不符合语法规范");
+            System.out.println("错误！" + e.getMessage());
         }
     }
 }

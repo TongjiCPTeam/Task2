@@ -1,3 +1,6 @@
-PROGRAM test
+PROGRAM add
+VAR b,c;
 BEGIN
+    b := 2 * 3;
+    c := a + b;
 END
