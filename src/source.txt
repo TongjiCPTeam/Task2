@@ -1,4 +1,5 @@
 PROGRAM add
+CONST a:=1;
 VAR b,c;
 BEGIN
     b := 2 * 3;

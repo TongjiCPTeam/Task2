@@ -41,8 +41,8 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 	public String visitAssignmentStatement(PL0Parser.AssignmentStatementContext ctx) {
 		String dst = ctx.identifier().getText();
 		String src = visitExpression(ctx.expression());
-		isDefined(dst);
-		isDefined(src);
+		isDstDefined(dst);
+		isSrcDefined(src);
 
 		emit(":=", src, null, dst);
 		return null;
@@ -55,17 +55,17 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 			String src1    = visitExpression(ctx.expression());
 			String op      = ctx.ADD_OPERATOR().getText();
 			String src2    = visitTerm(ctx.term());
-			isDefined(dst);
-			isDefined(src1);
-			isDefined(src2);
+			isDstDefined(dst);
+			isSrcDefined(src1);
+			isSrcDefined(src2);
 			emit(op, src1, src2, dst);
 			return dst;
 		} else if (ctx.getChildCount() == 2) {
 			String dst = getDst();
 			String op      = ctx.ADD_OPERATOR().getText();
 			String src     = visitTerm(ctx.term());
-			isDefined(dst);
-			isDefined(src);
+			isDstDefined(dst);
+			isSrcDefined(src);
 			emit(op, src, null, dst);
 			return dst;
 		} else {
@@ -82,9 +82,9 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 			String src1    = visitTerm(ctx.term());
 			String src2    = visitFactor(ctx.factor());
 			String op      = ctx.MUL_OPERATOR().getText();
-			isDefined(dst);
-			isDefined(src1);
-			isDefined(src2);
+			isDstDefined(dst);
+			isSrcDefined(src1);
+			isSrcDefined(src2);
 			emit(op, src1, src2, dst);
 			return dst;
 		}
@@ -95,8 +95,8 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 		if (ctx.expression() != null) {
 			String dst = getDst();
 			String src     = visitExpression(ctx.expression());
-			isDefined(dst);
-			isDefined(src);
+			isDstDefined(dst);
+			isSrcDefined(src);
 
 			emit(":=", src, null, dst);
 			return dst;
@@ -137,8 +137,8 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 		String label = getTempAddr();
 		String condition = visitCondition(ctx.condition());
 		List<String> conditionList = List.of(condition.split(","));
-		isDefined(conditionList.get(0));
-		isDefined(conditionList.get(2));
+		isSrcDefined(conditionList.get(0));
+		isSrcDefined(conditionList.get(2));
 		emit("J" + conditionList.get(1), conditionList.get(0), conditionList.get(2), label);
 		visit(ctx.statement());
 		addrList.add(addr);
@@ -152,8 +152,8 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 		addrList.add(addr);
 		String condition = visitCondition(ctx.condition());
 		List<String> conditionList = List.of(condition.split(","));
-		isDefined(conditionList.get(0));
-		isDefined(conditionList.get(2));
+		isSrcDefined(conditionList.get(0));
+		isSrcDefined(conditionList.get(2));
 		emit("J" + conditionList.get(1), conditionList.get(0), conditionList.get(2), endLabel);
 		visit(ctx.statement());
 		emit("J", null, null, startLabel);
@@ -166,7 +166,7 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 	}
 
 	private String getTempAddr() {
-		return "TEMPADDRBEGIN" + addrNum++ + "TEMPADDREND";
+		return "TEMPADDRBEGIN~" + addrNum++ + "TEMPADDREND~";
 	}
 
 	private void emit(String op, String arg1, String arg2, String result) {
@@ -178,7 +178,7 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 	}
 
 	public void printCode() {
-		String  regex   = "TEMPADDRBEGIN(\\d+)TEMPADDREND";
+		String  regex   = "TEMPADDRBEGIN~(\\d+)TEMPADDREND~";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(code);
 
@@ -192,7 +192,7 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 		System.out.println(code);
 	}
 
-	private void isDefined(String var) {
+	private void isDstDefined(String var) {
 		// 如果src不是立即数
 		if (!var.matches("(\\d+|T\\d+)")) {
 			// 获取src对应的符号表条目
@@ -204,6 +204,18 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String> {
 			if (srcEntry == Kind.CONSTANT) {
 				// 如果src是常量，抛出错误
 				throw new RuntimeException("不能对常量" + var + "赋值！");
+			}
+		}
+	}
+
+	private void isSrcDefined(String var) {
+		// 如果src不是立即数
+		if (!var.matches("(\\d+|T\\d+)")) {
+			// 获取src对应的符号表条目
+			Kind srcEntry = symbolTable.lookup(var);
+			if (srcEntry == null) {
+				// 如果src是未定义的标识符，抛出错误
+				throw new RuntimeException("变量" + var + "未定义！");
 			}
 		}
 	}
