@@ -47,7 +47,7 @@ relOperator : EQ | NEQ | LT | LTE | GT | GTE ;
 
 // Lexer rules
 
-PROGRAM : 'PROGRAM' ;
+PROGRAM : WS* 'PROGRAM' WS ;
 BEGIN : 'BEGIN' ;
 END : 'END' ;
 CONST : 'CONST' ;
@@ -57,7 +57,7 @@ DO : 'DO' ;
 IF : 'IF' ;
 THEN : 'THEN' ;
 
-identifier : LETTER (LETTER | DIGIT)* ;
+identifier : WS* LETTER (LETTER | DIGIT)* WS* ;
 
 constant : DIGIT+ ;
 
