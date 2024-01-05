@@ -1,8 +1,5 @@
 package ANTLR.PL0;
 
-import ANTLR.PL0.PL0BaseVisitor;
-import ANTLR.PL0.PL0Parser;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
