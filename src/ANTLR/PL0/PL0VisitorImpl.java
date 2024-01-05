@@ -72,10 +72,28 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String>{
 	}
 
 	@Override
+	public String visitCondition(PL0Parser.ConditionContext ctx) {
+		// 获取左操作数
+		PL0Parser.ExpressionContext leftExpr = ctx.expression(0);
+		String left = visit(leftExpr); // 假设visit方法会返回操作数的字符串表示
+
+		// 获取右操作数
+		PL0Parser.ExpressionContext rightExpr = ctx.expression(1);
+		String right = visit(rightExpr); // 假设visit方法会返回操作数的字符串表示
+
+		// 获取关系操作符
+		PL0Parser.RelOperatorContext relOpCtx = ctx.relOperator();
+		String operator = relOpCtx.getText(); // 假设getText()方法会返回操作符的文本
+
+		return left + "," + operator + "," + right;
+	}
+
+	@Override
 	public String visitConditionalStatement(PL0Parser.ConditionalStatementContext ctx) {
 		String label = getTempAddr();
 		String condition = visitCondition(ctx.condition());
-		emit("JMC", condition, null, label);
+		List<String> conditionList = List.of(condition.split(","));
+		emit("J" + conditionList.get(1), conditionList.get(0), conditionList.get(2), label);
 		visit(ctx.statement());
 		addrList.add(addr);
 		return null;
@@ -87,9 +105,10 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String>{
 		String endLabel   = getTempAddr();
 		addrList.add(addr);
 		String condition = visitCondition(ctx.condition());
-		emit("JMC", condition, null, endLabel);
+		List<String> conditionList = List.of(condition.split(","));
+		emit("J" + conditionList.get(1), conditionList.get(0), conditionList.get(2), endLabel);
 		visit(ctx.statement());
-		emit("JMP", null, null, startLabel);
+		emit("J", null, null, startLabel);
 		addrList.add(addr);
 		return null;
 	}
