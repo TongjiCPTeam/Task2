@@ -12,7 +12,7 @@ subprogram : constDeclaration? varDeclaration? statementPart ;
 
 constDeclaration : CONST constDefinition (COMMA constDefinition)* SEMI;
 
-constDefinition : identifier EQ unsignedInteger ;
+constDefinition : identifier ASSIGN unsignedInteger ;
 
 unsignedInteger : DIGIT (COMMA? DIGIT)* ;
 
