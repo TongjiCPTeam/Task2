@@ -4,43 +4,26 @@ import ANTLR.PL0.PL0VisitorImpl;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class Main {
     public static void main(String[] args) {
+        String filePath = "src/source.txt";
+        String sourceCode = null;
 
-//        CalculatorLexer lexer = new CalculatorLexer(CharStreams.fromString("5+4+2/3+5-7*9"));
-//        CalculatorParser parser = new CalculatorParser((new CommonTokenStream(lexer)));
-//        parser.start();
-//        parser.setBuildParseTree(true);
-//        CalculatorParser.StartContext tree = parser.start();
-//        CalculatorBaseVisitor<String> visitor = new CalculatorVisitorImpl();
-//        visitor.visit(tree);
-//        System.out.println("parser has executed");
+        try {
+            sourceCode = new String(Files.readAllBytes(Paths.get(filePath)));
+            System.out.println(sourceCode);
+        } catch (IOException e) {
+            System.out.println("源程序文件读取失败");
+            return;
+        }
 
-//        String input = """
-//                PROGRAM test
-//                CONST a = 1;
-//                VAR b, c;
-//
-//                BEGIN
-//                  b := b + a;
-//                END
-//                """;
+        int startAddr = 0;
 
-        String input = """
-                PROGRAM add
-                VAR x,y;
-                BEGIN
-                    x:=1;
-                    y:=2;
-                    WHILE x<5 DO x:=x+1;
-                    IF y>0 THEN y:=y-1;
-                    y:=y+x
-                END
-                """;
-
-        int startAddr = 100;
-
-        PL0Lexer lexer = new PL0Lexer(CharStreams.fromString(input));
+        PL0Lexer lexer = new PL0Lexer(CharStreams.fromString(sourceCode));
         PL0Parser parser = new PL0Parser((new CommonTokenStream(lexer)));
 //        parser.start();
         parser.setBuildParseTree(true);
