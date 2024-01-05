@@ -1,9 +1,21 @@
 package ANTLR.PL0;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class PL0VisitorImpl extends PL0BaseVisitor<String>{
 	private final StringBuilder code                = new StringBuilder();
-	private       int           labelCounter        = 0;
-	private       int           tempVariableCounter = 0;
+	private final List<Integer> addrList = new ArrayList<>();
+	private       int           addr;
+	private       int           addrNum  = 0;
+	private       int           dNumber  = 0;
+
+	public PL0VisitorImpl(int addrStart) {
+		super();
+		this.addr = addrStart;
+	}
 
 	@Override
 	public String visitAssignmentStatement(PL0Parser.AssignmentStatementContext ctx) {
@@ -16,14 +28,14 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String>{
 	@Override
 	public String visitExpression(PL0Parser.ExpressionContext ctx) {
 		if (ctx.getChildCount() == 3) {
-			String dst = generateDestination();
+			String dst = getDst();
 			String src1    = visitExpression(ctx.expression());
 			String op      = ctx.ADD_OPERATOR().getText();
 			String src2    = visitTerm(ctx.term());
 			emit(op, src1, src2, dst);
 			return dst;
 		} else if (ctx.getChildCount() == 2) {
-			String dst = generateDestination();
+			String dst = getDst();
 			String op      = ctx.ADD_OPERATOR().getText();
 			String src     = visitTerm(ctx.term());
 			emit(op, src, null, dst);
@@ -38,7 +50,7 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String>{
 		if (ctx.getChildCount() == 1) {
 			return visitFactor(ctx.factor());
 		} else {
-			String dst = generateDestination();
+			String dst = getDst();
 			String src1    = visitTerm(ctx.term());
 			String src2    = visitFactor(ctx.factor());
 			String op      = ctx.MUL_OPERATOR().getText();
@@ -50,7 +62,7 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String>{
 	@Override
 	public String visitFactor(PL0Parser.FactorContext ctx) {
 		if (ctx.expression() != null) {
-			String dst = generateDestination();
+			String dst = getDst();
 			String src     = visitExpression(ctx.expression());
 			emit(":=", src, null, dst);
 			return dst;
@@ -61,43 +73,55 @@ public class PL0VisitorImpl extends PL0BaseVisitor<String>{
 
 	@Override
 	public String visitConditionalStatement(PL0Parser.ConditionalStatementContext ctx) {
-		String label     = generateLabel();
+		String label = getTempAddr();
 		String condition = visitCondition(ctx.condition());
 		emit("JMC", condition, null, label);
 		visit(ctx.statement());
-		emit("LABEL", null, null, label);
+		addrList.add(addr);
 		return null;
 	}
 
 	@Override
 	public String visitLoopStatement(PL0Parser.LoopStatementContext ctx) {
-		String startLabel = generateLabel();
-		String endLabel   = generateLabel();
-		emit("LABEL", null, null, startLabel);
+		String startLabel = getTempAddr();
+		String endLabel   = getTempAddr();
+		addrList.add(addr);
 		String condition = visitCondition(ctx.condition());
 		emit("JMC", condition, null, endLabel);
 		visit(ctx.statement());
 		emit("JMP", null, null, startLabel);
-		emit("LABEL", null, null, endLabel);
+		addrList.add(addr);
 		return null;
 	}
 
-	private String generateDestination() {
-		return "T" + tempVariableCounter++;
+	private String getDst() {
+		return "T" + dNumber++;
 	}
 
-	private String generateLabel() {
-		return "L" + labelCounter++;
+	private String getTempAddr() {
+		return "TEMPADDRBEGIN" + addrNum++ + "TEMPADDREND";
 	}
 
 	private void emit(String op, String arg1, String arg2, String result) {
-		code.append("(").append(op).append(", ")
+		code.append(addr++).append(" ")
+				.append("(").append(op).append(", ")
 				.append(arg1 != null ? arg1 : "_").append(", ")
 				.append(arg2 != null ? arg2 : "_").append(", ")
 				.append(result).append(")").append("\n");
 	}
 
 	public void printCode() {
+		String  regex   = "TEMPADDRBEGIN(\\d+)TEMPADDREND";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(code);
+
+		while (matcher.find()) {
+			int    index       = Integer.parseInt(matcher.group(1));
+			String replacement = addrList.get(index).toString();
+			code.replace(matcher.start(), matcher.end(), replacement);
+			matcher.reset(code);
+		}
+
 		System.out.println(code);
 	}
 }

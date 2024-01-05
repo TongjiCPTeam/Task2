@@ -38,13 +38,16 @@ public class Main {
                 END
                 """;
 
+        int startAddr = 100;
+
         PL0Lexer lexer = new PL0Lexer(CharStreams.fromString(input));
         PL0Parser parser = new PL0Parser((new CommonTokenStream(lexer)));
 //        parser.start();
         parser.setBuildParseTree(true);
         PL0Parser.StartContext tree = parser.start();
+
 //        PL0BaseVisitor<String> visitor = new PL0VisitorImpl();
-        PL0VisitorImpl visitor = new PL0VisitorImpl();
+        PL0VisitorImpl visitor = new PL0VisitorImpl(startAddr);
         visitor.visit(tree);
         visitor.printCode();
 
