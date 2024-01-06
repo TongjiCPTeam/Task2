@@ -36,10 +36,14 @@ public class Main {
             SymbolTable symbolTable = new SymbolTable();
 
             PL0VisitorImpl visitor = new PL0VisitorImpl(startAddr, symbolTable);
+
             visitor.visit(tree);
             visitor.printCode();
 
             System.out.println("parser has executed");
+            System.out.println();
+            //打印符号表
+            symbolTable.printTable();
         }catch (Exception e){
             System.out.println("错误！" + e.getMessage());
         }
