@@ -21,4 +21,11 @@ public class SymbolTable {
 		}
 		return entries.get(name);
 	}
+
+	public void printTable() {
+		System.out.println("符号表：");
+		for (int i = 1; i < entries.size(); i++) {
+			System.out.println(entries.keySet().toArray()[i] + "\t" + entries.values().toArray()[i]);
+		}
+	}
 }
